@@ -1,8 +1,20 @@
-import React from 'react'
-import MediaRow from './MediaRow'
-import PropTypes from 'prop-types';
+import React from 'react';
+import MediaRow from './MediaRow';
+import { useState, useEffect } from 'react';
 
-export default function MediaTable({ picArray }) {
+export default function MediaTable() {
+  const [picArray, setPicArray] = useState([]);
+
+  useEffect(() => {
+    const loadMedia = async () => {
+      const response = await fetch('test.json');
+      const files = await response.json();
+      console.log(files);
+      setPicArray(files);
+    };
+    loadMedia();
+  }, []);
+
   return (
     <table>
       <tbody>
@@ -14,6 +26,3 @@ export default function MediaTable({ picArray }) {
   )
 }
 
-MediaTable.propTypes = {
-  picArray: PropTypes.array,
-};
