@@ -12,6 +12,7 @@ export default function MediaTable() {
       console.log(files);
       setPicArray(files);
     };
+
     loadMedia();
   }, []);
 
