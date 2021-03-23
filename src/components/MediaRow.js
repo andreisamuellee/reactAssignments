@@ -1,8 +1,8 @@
-import React from 'react'
 import PropTypes from 'prop-types';
 import { uploadsUrl } from '../utils/variables';
+import { Link } from 'react-router-dom';
 
-export default function MediaRow({ file }) {
+const MediaRow = ({ file }) => {
   return (
     <tr>
       <td>
@@ -13,12 +13,21 @@ export default function MediaRow({ file }) {
         <p>{file.description}</p>
       </td>
       <td>
-        <a href={uploadsUrl + file.filename}>View</a>
+        <Link
+          to={
+            {
+              pathname: '/single',
+              state: file,
+            }
+          }
+        >View</Link>
       </td>
     </tr>
-  )
-}
+  );
+};
 
 MediaRow.propTypes = {
   file: PropTypes.object,
 };
+
+export default MediaRow;
