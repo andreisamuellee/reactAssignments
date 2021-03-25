@@ -1,5 +1,5 @@
 import MediaRow from './MediaRow';
-import { useAllMedia } from '../hooks/apiHooks';
+import { useAllMedia } from '../hooks/ApiHooks';
 
 const MediaTable = () => {
   const picArray = useAllMedia();

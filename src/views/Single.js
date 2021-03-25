@@ -2,7 +2,6 @@ import { uploadsUrl } from '../utils/variables';
 import PropTypes from 'prop-types';
 
 const Single = ({ location }) => {
-  console.log('match', location);
   const file = location.state;
 
   return (
