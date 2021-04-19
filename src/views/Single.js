@@ -1,14 +1,16 @@
 import { uploadsUrl } from '../utils/variables';
 import PropTypes from 'prop-types';
 import {
+  Avatar,
   Card,
-  CardActionArea, CardContent, CardMedia,
+  CardContent,
+  CardMedia, List, ListItem, ListItemAvatar,
   makeStyles,
   Paper,
   Typography,
 } from '@material-ui/core';
 import BackButton from '../components/BackButton';
-import { useUsers } from '../hooks/ApiHooks';
+import { useTag, useUsers } from '../hooks/ApiHooks';
 import { useEffect, useState } from 'react';
 
 const useStyles = makeStyles({
@@ -22,8 +24,10 @@ const useStyles = makeStyles({
 
 const Single = ({ location }) => {
   const [owner, setOwner] = useState(null);
+  const [avatar, setAvatar] = useState('logo512.png');
   const classes = useStyles();
   const { getUserById } = useUsers();
+  const { getTag } = useTag();
 
   const file = location.state;
   let desc = {}; // jos kuva tallennettu ennen week4C, description ei ole JSONia
@@ -39,6 +43,11 @@ const Single = ({ location }) => {
       try {
         setOwner(await getUserById(localStorage.getItem('token'),
           file.user_id));
+        const result = await getTag('avatar_' + file.user_id);
+        if (result.length > 0) {
+          const image = result.pop().filename;
+          setAvatar(uploadsUrl + image);
+        }
       } catch (e) {
         console.log(e.message);
       }
@@ -60,27 +69,32 @@ const Single = ({ location }) => {
       </Typography>
       <Paper elevation="3">
         <Card className={classes.root}>
-          <CardActionArea>
-            <CardMedia
-              component={file.media_type}
-              controls
-              className={classes.media}
-              image={uploadsUrl + file.filename}
-              title={file.title}
-              style={{
-                filter: `
+          <CardMedia
+            component={file.media_type}
+            controls
+            className={classes.media}
+            image={uploadsUrl + file.filename}
+            title={file.title}
+            style={{
+              filter: `
                       brightness(${desc.filters?.brightness}%)
                       contrast(${desc.filters?.contrast}%)
                       saturate(${desc.filters?.saturate}%)
                       sepia(${desc.filters?.sepia}%)
                       `,
-              }}
-            />
-            <CardContent>
-              <Typography gutterBottom>{desc.description}</Typography>
-              <Typography variant="subtitle2">{owner?.username}</Typography>
-            </CardContent>
-          </CardActionArea>
+            }}
+          />
+          <CardContent>
+            <Typography gutterBottom>{desc.description}</Typography>
+            <List>
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar variant={'circle'} src={avatar} />
+                </ListItemAvatar>
+                <Typography variant="subtitle2">{owner?.username}</Typography>
+              </ListItem>
+            </List>
+          </CardContent>
         </Card>
       </Paper>
     </>

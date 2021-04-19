@@ -8,6 +8,8 @@ import Logout from './views/Logout';
 import Upload from './views/Upload';
 import { MediaProvider } from './contexts/MediaContext';
 import { Container } from '@material-ui/core';
+import MyFiles from './views/MyFiles';
+import Modify from './views/Modify';
 
 const App = () => {
   return (
@@ -15,7 +17,7 @@ const App = () => {
       <MediaProvider>
         <Container maxWidth="md">
           <Nav />
-          <main style={{ marginTop: 80 }}>
+          <main style={{ marginTop: 80, marginBottom: 40 }}>
             <Switch>
               <Route path="/" exact component={Home} />
               <Route path="/login" component={Login} />
@@ -23,6 +25,8 @@ const App = () => {
               <Route path="/single" component={Single} />
               <Route path="/logout" component={Logout} />
               <Route path="/upload" component={Upload} />
+              <Route path="/myfiles" component={MyFiles} />
+              <Route path="/modify" component={Modify} />
             </Switch>
           </main>
         </Container>

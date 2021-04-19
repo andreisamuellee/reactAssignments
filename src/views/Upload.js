@@ -1,4 +1,4 @@
-import useUploadForm from '../hooks/UploadHooks';
+import useForm from '../hooks/FormHooks';
 import { useMedia, useTag } from '../hooks/ApiHooks';
 import {
   CircularProgress,
@@ -52,7 +52,7 @@ const Upload = ({ history }) => {
   };
 
   const { inputs, handleInputChange, handleSubmit, handleFileChange, setInputs } =
-    useUploadForm(doUpload, {
+    useForm(doUpload, {
       title: '',
       description: '',
       file: null,

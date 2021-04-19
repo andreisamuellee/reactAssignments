@@ -3,6 +3,9 @@ import { uploadsUrl } from '../utils/variables';
 import { Link as RouterLink } from 'react-router-dom';
 import { GridListTileBar, IconButton, makeStyles } from '@material-ui/core';
 import PageviewIcon from '@material-ui/icons/Pageview';
+import DeleteIcon from '@material-ui/icons/Delete';
+import CreateIcon from '@material-ui/icons/Create';
+import { withRouter } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -10,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MediaRow = ({ file }) => {
+const MediaRow = ({ file, ownFiles, history, deleteMedia }) => {
   const classes = useStyles();
 
   let desc = {}; // jos kuva tallennettu ennen week4C, description ei ole JSONia
@@ -37,7 +40,7 @@ const MediaRow = ({ file }) => {
       />
       <GridListTileBar
         title={file.title}
-        subtitle={desc.description}
+        subtitle={ownFiles || desc.description}
         actionIcon={
           <>
             <IconButton
@@ -53,6 +56,40 @@ const MediaRow = ({ file }) => {
             >
               <PageviewIcon fontSize="large" />
             </IconButton>
+            {ownFiles &&
+              <>
+                <IconButton
+                  aria-label={`modify file`}
+                  className={classes.icon}
+                  component={RouterLink}
+                  to={
+                    {
+                      pathname: '/modify',
+                      state: file,
+                    }
+                  }
+                >
+                  <CreateIcon fontSize="large" />
+                </IconButton>
+                <IconButton
+                  aria-label={`delete file`}
+                  className={classes.icon}
+                  onClick={() => {
+                    try {
+                      // eslint-disable-next-line no-restricted-globals
+                      const conf = confirm('Do you really want to delete?');
+                      if (conf) {
+                        deleteMedia(file.file_id, localStorage.getItem('token'));
+                      }
+                    } catch (e) {
+                      console.log(e.message);
+                    }
+                  }}
+                >
+                  <DeleteIcon fontSize="large" />
+                </IconButton>
+              </>
+            }
           </>
         }
       />
@@ -62,6 +99,9 @@ const MediaRow = ({ file }) => {
 
 MediaRow.propTypes = {
   file: PropTypes.object,
+  ownFiles: PropTypes.bool,
+  history: PropTypes.object,
+  deleteMedia: PropTypes.func,
 };
 
-export default MediaRow;
+export default withRouter(MediaRow);

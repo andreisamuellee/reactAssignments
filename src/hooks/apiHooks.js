@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { appIdentifier, baseUrl } from '../utils/variables';
+import { MediaContext } from '../contexts/MediaContext';
 
 // general function for fetching (options default value is empty object)
 const doFetch = async (url, options = {}) => {
@@ -19,11 +20,13 @@ const doFetch = async (url, options = {}) => {
 };
 
 // set update to true, if you want to use getMedia automagically
-const useMedia = (update = false) => {
+const useMedia = (update = false, ownFiles) => {
   const [picArray, setPicArray] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [user] = useContext(MediaContext);
 
   if (update) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       try {
         (async () => {
@@ -41,9 +44,15 @@ const useMedia = (update = false) => {
       setLoading(true);
       const files = await doFetch(baseUrl + 'tags/' + appIdentifier);
       // console.log(files);
-      return await Promise.all(files.map(async (item) => {
+      let allFiles = await Promise.all(files.map(async (item) => {
         return await doFetch(baseUrl + 'media/' + item.file_id);
       }));
+      if (ownFiles && user !== null) {
+        allFiles = allFiles.filter((item) => {
+          return item.user_id === user.user_id;
+        });
+      }
+      return allFiles;
     } catch (e) {
       throw new Error(e.message);
     } finally {
@@ -68,7 +77,48 @@ const useMedia = (update = false) => {
       setLoading(false);
     }
   };
-  return { getMedia, postMedia, loading, picArray };
+
+  const putMedia = async (data, id, token) => {
+    setLoading(true);
+    const fetchOptions = {
+      method: 'PUT',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    try {
+      return await doFetch(baseUrl + 'media/' + id, fetchOptions);
+    } catch (e) {
+      throw new Error('modify failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteMedia = async (id, token) => {
+    setLoading(true);
+    const fetchOptions = {
+      method: 'DELETE',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    try {
+      const resp = await doFetch(baseUrl + 'media/' + id, fetchOptions);
+      if (resp) {
+        const media = await getMedia();
+        setPicArray(media);
+      }
+    } catch (e) {
+      throw new Error('delete failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { getMedia, postMedia, putMedia, deleteMedia, loading, picArray };
 };
 
 const useUsers = () => {
@@ -77,6 +127,22 @@ const useUsers = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(inputs),
+    };
+    try {
+      return await doFetch(baseUrl + 'users', fetchOptions);
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+  const putUser = async (inputs, token) => {
+    const fetchOptions = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': token,
       },
       body: JSON.stringify(inputs),
     };
@@ -124,7 +190,7 @@ const useUsers = () => {
     }
   };
 
-  return { register, getUserAvailable, getUser, getUserById };
+  return { register, getUserAvailable, getUser, getUserById, putUser };
 };
 
 const useLogin = () => {
@@ -167,7 +233,16 @@ const useTag = () => {
     }
   };
 
-  return { postTag };
+  const getTag = async (tag) => {
+    try {
+      const response = await doFetch(baseUrl + 'tags/' + tag);
+      return response;
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+  return { postTag, getTag };
 };
 
 
