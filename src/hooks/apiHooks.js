@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
-import { useEffect, useState, useContext } from 'react';
-import { appIdentifier, baseUrl } from '../utils/variables';
-import { MediaContext } from '../contexts/MediaContext';
+import {useEffect, useState, useContext} from 'react';
+import {appIdentifier, baseUrl} from '../utils/variables';
+import {MediaContext} from '../contexts/MediaContext';
 
 // general function for fetching (options default value is empty object)
 const doFetch = async (url, options = {}) => {
@@ -118,7 +118,7 @@ const useMedia = (update = false, ownFiles) => {
     }
   };
 
-  return { getMedia, postMedia, putMedia, deleteMedia, loading, picArray };
+  return {getMedia, postMedia, putMedia, deleteMedia, loading, picArray};
 };
 
 const useUsers = () => {
@@ -190,7 +190,7 @@ const useUsers = () => {
     }
   };
 
-  return { register, getUserAvailable, getUser, getUserById, putUser };
+  return {register, getUserAvailable, getUser, getUserById, putUser};
 };
 
 const useLogin = () => {
@@ -209,7 +209,7 @@ const useLogin = () => {
     }
   };
 
-  return { postLogin };
+  return {postLogin};
 };
 
 const useTag = () => {
@@ -242,8 +242,8 @@ const useTag = () => {
     }
   };
 
-  return { postTag, getTag };
+  return {postTag, getTag};
 };
 
 
-export { useMedia, useUsers, useLogin, useTag };
+export {useMedia, useUsers, useLogin, useTag};

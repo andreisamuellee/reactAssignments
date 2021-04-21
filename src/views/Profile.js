@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from 'react';
-import { MediaContext } from '../contexts/MediaContext';
+import {useContext, useEffect, useState} from 'react';
+import {MediaContext} from '../contexts/MediaContext';
 import {
   Avatar,
   Card,
@@ -13,10 +13,10 @@ import {
 import PersonIcon from '@material-ui/icons/Person';
 import EmailIcon from '@material-ui/icons/Email';
 import BackButton from '../components/BackButton';
-import { Link as RouterLink } from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 import ProfileForm from '../components/ProfileForm';
-import { useTag } from '../hooks/ApiHooks';
-import { uploadsUrl } from '../utils/variables';
+import {useTag} from '../hooks/ApiHooks';
+import {uploadsUrl} from '../utils/variables';
 import CreateIcon from '@material-ui/icons/Create';
 
 const Profile = () => {
@@ -24,7 +24,7 @@ const Profile = () => {
   const [avatar, setAvatar] = useState('logo512.png');
   const [update, setUpdate] = useState(false);
   const [toggleForm, setToggleForm] = useState(false);
-  const { getTag } = useTag();
+  const {getTag} = useTag();
 
   useEffect(() => {
     (async () => {

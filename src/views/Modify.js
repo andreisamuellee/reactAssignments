@@ -1,5 +1,6 @@
+/* eslint-disable jsx-a11y/alt-text */
 import useForm from '../hooks/FormHooks';
-import { useMedia } from '../hooks/ApiHooks';
+import {useMedia} from '../hooks/ApiHooks';
 import {
   CircularProgress,
   Button,
@@ -8,13 +9,13 @@ import {
   Slider,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import useSlider from '../hooks/SliderHooks';
 import BackButton from '../components/BackButton';
-import { uploadsUrl } from '../utils/variables';
+import {uploadsUrl} from '../utils/variables';
 
-const Modify = ({ history, location }) => {
-  const { putMedia, loading } = useMedia();
+const Modify = ({history, location}) => {
+  const {putMedia, loading} = useMedia();
   const file = location.state;
 
   const desc = JSON.parse(file.description);
@@ -48,7 +49,7 @@ const Modify = ({ history, location }) => {
     }
   };
 
-  const { inputs, handleInputChange, handleSubmit } =
+  const {inputs, handleInputChange, handleSubmit} =
     useForm(doUpload, {
       title: file.title,
       description: desc.description,
